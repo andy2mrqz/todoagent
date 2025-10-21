@@ -1,14 +1,20 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { blue, yellow } from './format.ts'
 import { getUserMessage } from './input.ts'
+import { type AgentTool } from './tool.ts'
 
 export class Agent {
   private client: Anthropic
   private model: Anthropic.Model
+  private tools: AgentTool[]
 
-  constructor(model: Anthropic.Model = 'claude-haiku-4-5-20251001') {
+  constructor(
+    model: Anthropic.Model = 'claude-haiku-4-5-20251001',
+    tools: AgentTool[] = []
+  ) {
     this.client = new Anthropic() // Requires ANTHROPIC_API_KEY to be set
     this.model = model
+    this.tools = tools
   }
 
   async run(): Promise<void | Error> {
@@ -40,6 +46,7 @@ export class Agent {
       model: this.model,
       max_tokens: 1024,
       messages: conversation,
+      tools: this.tools,
     })
     return newMessage
   }
