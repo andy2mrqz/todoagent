@@ -29,6 +29,11 @@ export class TodoAgent extends Agent {
           type: 'string',
           description: 'the title of the todo',
         },
+        priority: {
+          type: 'string',
+          enum: ['Low', 'Medium', 'High'],
+          description: 'the priority of the todo',
+        },
         dueDate: {
           type: 'string',
           format: 'date',
