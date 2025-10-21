@@ -72,6 +72,7 @@ export class Agent {
 
     console.log(`${green('Tool')}: ${name}(${JSON.stringify(input)})\n`)
     const response = await tool.fn(input)
+    console.log(`${green('Tool Output')}: ${response}\n`)
     return {
       tool_use_id: id,
       content: response,
