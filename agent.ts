@@ -4,14 +4,17 @@ import { getUserMessage } from './input.ts'
 import { type AgentTool } from './tool.ts'
 
 export class Agent {
-  private client: Anthropic
-  private model: Anthropic.Model
-  private tools: AgentTool[]
+  protected systemPrompt: string
+  protected client: Anthropic
+  protected model: Anthropic.Model
+  protected tools: AgentTool[]
 
   constructor(
+    systemPrompt: string = 'You are a helpful agent.',
     model: Anthropic.Model = 'claude-haiku-4-5-20251001',
     tools: AgentTool[] = []
   ) {
+    this.systemPrompt = systemPrompt
     this.client = new Anthropic() // Requires ANTHROPIC_API_KEY to be set
     this.model = model
     this.tools = tools
@@ -41,8 +44,9 @@ export class Agent {
     }
   }
 
-  async chat(conversation: Anthropic.MessageParam[]) {
+  protected async chat(conversation: Anthropic.MessageParam[]) {
     const newMessage = this.client.messages.create({
+      system: this.systemPrompt,
       model: this.model,
       max_tokens: 1024,
       messages: conversation,

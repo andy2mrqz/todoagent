@@ -1,7 +1,7 @@
-import { Agent } from './agent.ts'
+import { TodoAgent } from './todo_agent.ts'
 
 async function main() {
-  const agent = new Agent()
+  const agent = new TodoAgent()
   await agent.run()
 }
 
