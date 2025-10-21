@@ -15,6 +15,7 @@ export class Agent {
     tools: AgentTool[] = []
   ) {
     this.systemPrompt = systemPrompt
+    this.injectDate()
     this.client = new Anthropic() // Requires ANTHROPIC_API_KEY to be set
     this.model = model
     this.tools = tools
@@ -76,5 +77,14 @@ export class Agent {
       content: response,
       type: 'tool_result',
     }
+  }
+
+  // helpers
+
+  protected injectDate() {
+    const now = new Date()
+    const isoDate = now.toLocaleString('en-US')
+    const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' })
+    this.systemPrompt += `\nToday's date is ${dayOfWeek}, ${isoDate}.`
   }
 }
