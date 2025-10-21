@@ -1,4 +1,5 @@
 import { Agent } from './agent.ts'
+import { type AgentTool } from './tool.ts'
 
 export class TodoAgent extends Agent {
   constructor() {
@@ -9,8 +10,18 @@ export class TodoAgent extends Agent {
 
       Do not offer to help with things you do not have a tool for.
     `)
-    this.tools = []
+    this.tools = [listTodosTool]
   }
 }
 
 // Tools
+const listTodosTool: AgentTool = {
+  name: 'list_todos',
+  description: "You list the user's todos",
+  input_schema: {
+    type: 'object',
+  },
+  fn: async () => {
+    return '\n1. Take out the trash\n2. Get some milk'
+  },
+}

@@ -4,5 +4,5 @@ export interface AgentTool {
   name: string
   description: string
   input_schema: Anthropic.Tool.InputSchema
-  fn: (input: string) => string
+  fn: (input: unknown) => Promise<string>
 }

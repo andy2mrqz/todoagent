@@ -1,5 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk'
-import { blue, yellow } from './format.ts'
+import { blue, green, yellow } from './format.ts'
 import { getUserMessage } from './input.ts'
 import { type AgentTool } from './tool.ts'
 
@@ -25,22 +25,28 @@ export class Agent {
 
     console.log("Chat with Claude (use 'ctrl-c' to quit)\n")
 
+    let readUserInput = true
     while (true) {
-      // user input
-      const userInput = await getUserMessage(`${blue('You')}: `)
-      conversation.push({ role: 'user', content: userInput })
-
+      if (readUserInput) {
+        const userInput = await getUserMessage(`${blue('You')}: `)
+        conversation.push({ role: 'user', content: userInput })
+      }
       // agent response
-      const response = await this.chat(conversation)
-      const message = { role: response.role, content: response.content }
-      conversation.push(message)
-
+      const { role, content } = await this.chat(conversation)
+      conversation.push({ role, content })
       // render agent response
-      for (const content of response.content) {
-        if (content.type === 'text') {
-          console.log(`\n${yellow('Claude')}: ${content.text}\n`)
+      const toolResults: Anthropic.ToolResultBlockParam[] = []
+      for (const block of content) {
+        if (block.type === 'text') {
+          console.log(`\n${yellow('Claude')}: ${block.text}\n`)
+        } else if (block.type === 'tool_use') {
+          toolResults.push(await this.executeTool(block))
         }
       }
+      // provide tool results if present
+      readUserInput = toolResults.length === 0
+      if (readUserInput) continue
+      conversation.push({ role: 'user', content: toolResults })
     }
   }
 
@@ -53,5 +59,22 @@ export class Agent {
       tools: this.tools,
     })
     return newMessage
+  }
+
+  protected async executeTool({
+    id,
+    name,
+    input,
+  }: Anthropic.ToolUseBlock): Promise<Anthropic.ToolResultBlockParam> {
+    const tool = this.tools.find((t) => t.name === name)
+    if (!tool) return { tool_use_id: id, is_error: true, type: 'tool_result' }
+
+    console.log(`${green('Tool')}: ${name}(${JSON.stringify(input)})\n`)
+    const response = await tool.fn(input)
+    return {
+      tool_use_id: id,
+      content: response,
+      type: 'tool_result',
+    }
   }
 }
