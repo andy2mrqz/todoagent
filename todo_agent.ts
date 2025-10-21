@@ -13,7 +13,7 @@ export class TodoAgent extends Agent {
       Do not offer to help with things you do not have a tool for.
     `)
     this.todoApi = todoApi
-    this.tools = [this.listTodosTool, this.createTodoTool]
+    this.tools = [this.listTodosTool, this.createTodoTool, this.deleteTodoTool]
   }
 
   // Tools
@@ -37,15 +37,13 @@ export class TodoAgent extends Agent {
         },
       },
     },
-    fn: async (input: unknown) => {
+    fn: async (input) => {
       const res = await fetch(`${this.todoApi}/api/todos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(input),
       })
-      const body = await res.text()
-      console.log('body', body)
-      return body
+      return res.text()
     },
   }
 
@@ -58,8 +56,29 @@ export class TodoAgent extends Agent {
     },
     fn: async () => {
       const res = await fetch(`${this.todoApi}/api/todos`)
-      const body = await res.text()
-      return body
+      return res.text()
+    },
+  }
+
+  // D in CRUD
+  deleteTodoTool: AgentTool = {
+    name: 'delete_todo',
+    description: "You can delete a user's todo by id",
+    input_schema: {
+      type: 'object',
+      properties: {
+        todoId: {
+          type: 'string',
+          description: 'the todo id to delete',
+        },
+      },
+    },
+    fn: async (input) => {
+      const { todoId } = input as { todoId: string }
+      const res = await fetch(`${this.todoApi}/api/todos/${todoId}`, {
+        method: 'DELETE',
+      })
+      return res.text()
     },
   }
 }
