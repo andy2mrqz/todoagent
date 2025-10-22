@@ -62,30 +62,28 @@ export class Agent {
     return newMessage
   }
 
-  protected async executeTool({
-    id,
-    name,
-    input,
-  }: Anthropic.ToolUseBlock): Promise<Anthropic.ToolResultBlockParam> {
-    const tool = this.tools.find((t) => t.name === name)
-    if (!tool) return { tool_use_id: id, is_error: true, type: 'tool_result' }
+  protected async executeTool({ id, name, input }: Anthropic.ToolUseBlock): Promise<Anthropic.ToolResultBlockParam> {
+    const type = 'tool_result'
+    const toolResult = (content?: string, is_error?: boolean) => ({ tool_use_id: id, is_error, content, type } as const)
 
-    console.log(`${green('Tool')}: ${name}(${JSON.stringify(input)})\n`)
-    const response = await tool.fn(input)
-    console.log(`${green('Tool Output')}: ${response}\n`)
-    return {
-      tool_use_id: id,
-      content: response,
-      type: 'tool_result',
+    const tool = this.tools.find((t) => t.name === name)
+    if (!tool) return toolResult('tool not found', true)
+
+    console.log(`${green('Tool')}: ${name}(${JSON.stringify(input)})`)
+    try {
+      const response = (await tool.fn(input)) || '[no tool output]'
+      console.log(`${green('Tool Output')}: ${response}\n`)
+      return toolResult(response)
+    } catch (error) {
+      console.warn(`${green('Tool Output')}: ${String(error)}\n`)
+      return toolResult(String(error), true)
     }
   }
 
   // helpers
 
   protected injectDate() {
-    const now = new Date()
-    const isoDate = now.toLocaleString('en-US')
-    const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' })
-    this.systemPrompt += `\nToday's date is ${dayOfWeek}, ${isoDate}.`
+    const date = new Date().toUTCString() // e.g. Wed, 22 Oct 2025 04:56:33 GMT
+    this.systemPrompt += `\nToday's date (in UTC) is ${date}.`
   }
 }
