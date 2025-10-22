@@ -4,12 +4,11 @@
 
 A small implementation of a TodoAgent with Tools.
 
-This project is designed to run alongside a separate To-Do web app.
-As you first interact with the To-Dos on the web app, then interact with
-the TodoAgent, you'll start to feel the similarities, differences, advantages, and disadvantages of each interface.
+This project is designed to run alongside a separate To-Do web app. As you first interact with the To-Dos on the web
+app, then interact with the TodoAgent, you'll start to feel the similarities, differences, advantages, and disadvantages
+of each interface.
 
-Why a To-Do app? It's a common "hello world" for CRUD apps, so seemed
-like a good introduction to AI Agents and Tools.
+Why a To-Do app? It's a common "hello world" for CRUD apps, so seemed like a good introduction to AI Agents and Tools.
 
 ## Features
 
@@ -20,7 +19,9 @@ like a good introduction to AI Agents and Tools.
 
 ## Inspiration
 
-Inspired by [Thorsten Ball](https://thorstenball.com/)'s blog post for [Amp](https://ampcode.com/), titled "[How to Build an Agent](https://ampcode.com/how-to-build-an-agent)". Largely adapted from Go to Typescript and modified to target a Todo-App.
+Inspired by [Thorsten Ball](https://thorstenball.com/)'s blog post for [Amp](https://ampcode.com/), titled
+"[How to Build an Agent](https://ampcode.com/how-to-build-an-agent)". Largely adapted from Go to Typescript and modified
+to target a Todo-App.
 
 # Quickstart
 
@@ -54,9 +55,13 @@ Reflected in the app (note the date shows a Thursday due to UTC interactions I d
 # Troubleshooting
 
 - I'm getting this error `TypeError: fetch failed`, what's wrong?
-  - Make sure you are running the repo mentioned [here](#to-do-app-repo-to-run-too)
+  - Make sure you are running the Next.js repo mentioned [in the quickstart](#quickstart)
 
 # Final Note
 
-- Written by hand with no "Agent" or "Tab" completion enabled, to get the full effect described by Thorsten in his [article](https://ampcode.com/how-to-build-an-agent):
-  > I urge you to follow along. No, really. You might think you can just read this and that you don’t have to type out the code, but it’s less than 400 lines of code. I need you to feel how little code it is and I want you to see this with your own eyes in your own terminal in your own folders.
+All code was written by hand with no "Agent" or "Tab" completions enabled, to get the full effect described by Thorsten
+in [his article](https://ampcode.com/how-to-build-an-agent):
+
+> I urge you to follow along. No, really. You might think you can just read this and that you don’t have to type out the
+> code, but it’s less than 400 lines of code. I need you to feel how little code it is and I want you to see this with
+> your own eyes in your own terminal in your own folders.

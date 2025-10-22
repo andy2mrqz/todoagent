@@ -13,12 +13,7 @@ export class TodoAgent extends Agent {
       Do not offer to help with things you do not have a tool for.
     `)
     this.todoApi = todoApi
-    this.tools = [
-      this.createTodoTool,
-      this.listTodosTool,
-      this.updateTodoTool,
-      this.deleteTodoTool,
-    ]
+    this.tools = [this.createTodoTool, this.listTodosTool, this.updateTodoTool, this.deleteTodoTool]
   }
 
   // Tools
@@ -26,7 +21,7 @@ export class TodoAgent extends Agent {
   // C in CRUD
   createTodoTool: AgentTool = {
     name: 'create_todo',
-    description: "You can add a todo the user's list",
+    description: "You can add a todo to the user's list",
     input_schema: {
       type: 'object',
       properties: {
@@ -42,8 +37,7 @@ export class TodoAgent extends Agent {
         dueDate: {
           type: 'string',
           format: 'date',
-          description:
-            'the due date for the todo in ISO 8601 format (YYYY-MM-DD)',
+          description: 'the due date for the todo in ISO 8601 format (YYYY-MM-DD)',
         },
       },
     },
@@ -98,8 +92,7 @@ export class TodoAgent extends Agent {
         dueDate: {
           type: 'string',
           format: 'date',
-          description:
-            'the due date for the todo in ISO 8601 format (YYYY-MM-DD)',
+          description: 'the due date for the todo in ISO 8601 format (YYYY-MM-DD)',
         },
       },
     },
