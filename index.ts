@@ -6,4 +6,4 @@ async function main() {
 }
 
 // Entrypoint
-await main()
+main()
